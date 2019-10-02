@@ -19,11 +19,38 @@ class ViewController: UIViewController {
     
     var fromUnits = ""
     var toUnits = ""
+    var conversionStrings = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         formulaPicker.delegate = self
         formulaPicker.dataSource = self
+    }
+    
+    func calculateConversion() {
+        var outputValue = 0.0
+        if let inputValue = Double(userInput.text!) {
+            
+            switch conversionStrings {
+            case "miles to kilometers":
+                outputValue = inputValue / 0.62137
+            case "kilometers to miles":
+                outputValue = inputValue * 0.62137
+            case "feet to meters":
+                outputValue = inputValue / 3.2808
+            case "yard to meters":
+                outputValue = inputValue / 1.0936
+            case "meters to feet":
+                outputValue = inputValue * 3.2808
+            case "meters to yards":
+                outputValue = inputValue * 1.0936
+            default:
+                print("Show alert")
+            }
+            resultsOutlet.text = "\(inputValue) \(fromUnits) = \(outputValue) = \(toUnits)"
+        } else {
+            print("Show alert here.")
+        }
     }
 
     @IBAction func convertButtonPressed(_ sender: Any) {
@@ -45,11 +72,12 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        conversionStrings = formulaArray[row]
         let unitsArray = formulaArray[row].components(separatedBy: " to ")
         fromUnits = unitsArray[0]
         toUnits = unitsArray[1]
         fromUnitsLabel.text = fromUnits
-        resultsOutlet.text = toUnits
+        calculateConversion()
     }
     
 }
